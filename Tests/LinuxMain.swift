@@ -3,5 +3,5 @@ import XCTest
 import ParseTests
 
 var tests = [XCTestCaseEntry]()
-tests += ParseTests.allTests()
+tests += testCase(ParserTests.allTests)
 XCTMain(tests)
