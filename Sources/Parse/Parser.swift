@@ -27,6 +27,31 @@ extension Parser where Result == Input.Element {
     }
 }
 
+// MARK: - Lazy initialization
+
+extension Parser {
+    /// Returns a lazily evaluated Parser
+    ///
+    /// This is useful for declaring recursive parsers:
+    ///
+    ///     struct List {
+    ///         static let head = ...
+    ///         static var list {
+    ///             let comma = CharacterParser.character(in: ",")
+    ///             let tail = (comma *> .lazy(list))
+    ///             return curry { [$0] + ($1??[]) } <^> head <*> tail<?
+    ///         }
+    ///     }
+    ///
+    /// - Parameter parser: a Parser to evaluate lazily
+    /// - Returns: a lazy version of its `parser` argument
+    public static func lazy(_ parser: @autoclosure @escaping () -> Parser)
+        -> Parser
+    {
+        return Parser { parser().parse($0) }
+    }
+}
+
 // MARK: - Parser combinators
 
 extension Parser {
