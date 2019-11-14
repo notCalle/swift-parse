@@ -54,6 +54,18 @@ final class CharacterParserTests: XCTestCase {
         XCTAssertNil(nodigit.parse("123"))
     }
 
+    var abc = CP.string("abc")
+
+    func testStringSuccess() {
+        let (result, remainder) = abc.parse("abcd")!
+        XCTAssertTrue(String(result) == "abc")
+        XCTAssertTrue(remainder == "d")
+    }
+
+    func testStringFailure() {
+        XCTAssertNil(abc.parse("dabc"))
+    }
+
     // MARK: - List of all tests
     let allTests = [
         "testOneParserSuccess": testOneParserSuccess,
@@ -64,5 +76,7 @@ final class CharacterParserTests: XCTestCase {
         "testManyFailure": testManyFailure,
         "testNoneSuccess": testNoneSuccess,
         "testNoneFailure": testNoneFailure,
+        "testStringSuccess": testStringSuccess,
+        "testStringFailure": testStringFailure,
     ]
 }

@@ -168,3 +168,18 @@ extension CharacterParser {
         .character(in: CharacterSet(charactersIn: string))
     }
 }
+
+// MARK: - Static string matcher
+
+extension CharacterParser {
+    public static func string(_ string: String) -> CharacterParser.Many {
+        let length = string.count
+
+        return CharacterParser.Many { input in
+            guard input.starts(with: string) else { return nil }
+
+            let result = string.reduce(into: [], { $0.append($1) })
+            return (result, input.dropFirst(length))
+        }
+    }
+}
