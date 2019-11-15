@@ -51,6 +51,19 @@ extension CharacterParser {
     public static func character(_ match: Character) -> CharacterParser {
         return .character(matching: { $0 == match})
     }
+
+    /// Returns a CharacterParser that matches any other than the given character
+    ///
+    /// This example uses `character(not:)` to test that a string does not start with a `1`.
+    ///
+    ///     let one = CharacterParser.character(not: "1")
+    ///     let result = one.parse("1") == nil // result true
+    ///
+    /// - Parameter match: the `Character` to match with
+    /// - Returns: a `CharacterParser` that matches the given character
+    public static func character(not match: Character) -> CharacterParser {
+        return .character(matching: { $0 != match})
+    }
 }
 
 // MARK: - Character set proxies
@@ -72,7 +85,7 @@ extension CharacterParser {
     /// Returns a CharacterParser that matches a Character, that has a unicode scalar member
     /// in the given CharacterSet.
     ///
-    /// This example uses `character(in:)` to test that a string starts with a digit.
+    /// This example uses `characterSet(_:)` to test that a string starts with a digit.
     ///
     ///     let digit = CharacterParser.character(in: .digit)
     ///     let (result, _) = digit.parse("1") // result == "1"
@@ -150,23 +163,6 @@ extension CharacterParser {
     /// Returns a CharacterParser that matches a valid URL user subcomponent
     public static let urlUser: CharacterParser =
         .character(in: .urlUserAllowed)
-}
-
-// MARK: - String character set proxy
-
-extension CharacterParser {
-    /// Returns a CharacterParser that matches a Character, that exists in the given String.
-    ///
-    /// This example uses `character(in:)` to test that a string starts with a valid sign.
-    ///
-    ///     let sign = CharacterParser.character(in: "+-")
-    ///     let (result, _) = sign.parse("-1") // result == "-"
-    ///
-    /// - Parameter string: String to match with
-    /// - Returns: a `CharacterParser` that matches with a String
-    public static func character(in string: String) -> CharacterParser {
-        .character(in: CharacterSet(charactersIn: string))
-    }
 }
 
 // MARK: - Static string matcher
