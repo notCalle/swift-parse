@@ -11,9 +11,9 @@ final class RecursiveParserTests: XCTestCase {
             <^> CharacterParser.letter.many1
 
         static var parser: SexpParser {
-            let open = CharacterParser.character(in: "(")
+            let open = CharacterParser.character("(")
             let space = CharacterParser.whitespaceOrNewline
-            let close = CharacterParser.character(in: ")")
+            let close = CharacterParser.character(")")
 
             let expr = atom <|> .lazy(self.parser)
 
