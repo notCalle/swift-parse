@@ -2,12 +2,13 @@ import XCTest
 @testable import Parse
 
 final class CombinedParserTests: XCTestCase {
-    typealias CP = CharacterParser
-    typealias StringParser = CP.Map<String>
-    typealias IntParser = CP.Map<Int>
+    typealias StringParser = CharacterParser.Map<String>
+    typealias IntParser = CharacterParser.Map<Int>
 
-    let sign = { $0 ?? "+" } <^> CP.character(in: "+-").optional
-    let digits = CP.digit.many1
+    let plus = CharacterParser.character("+")
+    let minus = CharacterParser.character("-")
+    var sign: CharacterParser { { $0 ?? "+" } <^> (plus <|> minus)<? }
+    let digits = CharacterParser.digit.many1
     var number: StringParser { curry { String([$0] + $1) } <^> sign <*> digits }
     var integer: IntParser { { Int($0)! } <^> number }
 
@@ -29,7 +30,7 @@ final class CombinedParserTests: XCTestCase {
         XCTAssertEqual(remainder, "")
     }
 
-    let star = CP.character(in: "*")
+    let star = CharacterParser.character("*")
     var multiplication: IntParser {
         curry { $0 * ($1 ?? 1) } <^> integer
             <*> (star *> integer).optional }
@@ -40,7 +41,6 @@ final class CombinedParserTests: XCTestCase {
         XCTAssertEqual(remainder, "")
     }
 
-    let plus = CP.character(in: "+")
     var addition: IntParser {
         curry { $0 + ($1 ?? 0) } <^> multiplication
             <*> (plus *> multiplication)<? }
